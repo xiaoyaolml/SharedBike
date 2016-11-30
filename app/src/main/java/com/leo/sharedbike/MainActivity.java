@@ -23,6 +23,11 @@ import android.widget.Toast;
 
 import com.joanzapata.android.BaseAdapterHelper;
 import com.joanzapata.android.QuickAdapter;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXTextObject;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +40,15 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
     private List<Bike> mBikeList;
     private QuickAdapter<Bike> mAdapter;
-
+    private IWXAPI api;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        api = WXAPIFactory.createWXAPI(this, "wxf57b8e770be4cea4", false);
+        api.registerApp("wxf57b8e770be4cea4");
 
         mBikeList = new ArrayList<>();
 
@@ -148,6 +155,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private String buildTransaction(final String type) {
+        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -157,8 +168,22 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-
-
+            StringBuilder builder = new StringBuilder();
+            for (Bike bike:mBikeList) {
+                builder.append(bike.getId()+":"+bike.getPassword()+"\n");
+            }
+            WXTextObject textObject = new WXTextObject();
+            textObject.text = builder.toString();
+            WXMediaMessage message = new WXMediaMessage();
+            message.mediaObject = textObject;
+            message.description = "共享数据单";
+            // 构造一个Req
+            SendMessageToWX.Req req = new SendMessageToWX.Req();
+            req.transaction = buildTransaction("text"); // transaction字段用于唯一标识一个请求
+            req.message = message;
+            req.scene = SendMessageToWX.Req.WXSceneSession;
+            // 调用api接口发送数据到微信
+            api.sendReq(req);
             return true;
         }
 
