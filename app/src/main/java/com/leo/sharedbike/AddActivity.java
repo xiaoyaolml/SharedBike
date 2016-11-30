@@ -46,6 +46,8 @@ public class AddActivity extends AppCompatActivity {
                     @Override
                     public void done(String s, BmobException e) {
                         if (e == null) {
+                            etId.setText("");
+                            etPassword.setText("");
                             Snackbar.make(view, "保存成功！", Snackbar.LENGTH_LONG).show();
                         } else {
                             Snackbar.make(view, "保存失败！", Snackbar.LENGTH_LONG).show();
