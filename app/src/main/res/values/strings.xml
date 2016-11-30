@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SharedBike</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_add">添加数据</string>
+</resources>
