@@ -25,8 +25,10 @@ public class AddActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        String search = getIntent().getStringExtra(MainActivity.TAG);
         final EditText etId = (EditText) findViewById(R.id.add_id);
         final EditText etPassword = (EditText) findViewById(R.id.add_password);
+        etId.setText(search);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_save);
         fab.setOnClickListener(new View.OnClickListener() {

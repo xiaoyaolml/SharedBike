@@ -63,11 +63,15 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.main_list);
         listView.setAdapter(mAdapter);
 
+        final EditText etSearch = (EditText) findViewById(R.id.main_search);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, AddActivity.class));
+                String search = etSearch.getText().toString();
+                Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                intent.putExtra(TAG, search);
+                startActivity(intent);
             }
         });
 
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final ImageView ivClear = (ImageView) findViewById(R.id.main_search_clear);
-        final EditText etSearch = (EditText) findViewById(R.id.main_search);
+
         ivClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
